@@ -1,8 +1,13 @@
 import { faHome, faTicket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 
-const Nav = () => {
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import Logout from './Logout'
+
+const Nav = async () => {
+  const session = await getServerSession(authOptions)
   return (
     <nav className="flex justify-between bg-nav p-4">
       <div className="flex items-center space-x-4">
@@ -14,7 +19,13 @@ const Nav = () => {
         </Link>
       </div>
       <div>
-        <p className="text-default-text">as@gmail.com</p>
+        {session ? (
+          <Logout />
+        ) : (
+          <Link href={'/login'} className="btn btn-primary text-white">
+            Login
+          </Link>
+        )}
       </div>
     </nav>
   )
